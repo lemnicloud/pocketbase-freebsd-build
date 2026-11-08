@@ -1,4 +1,4 @@
-ARG VERSION=v0.40.4
+ARG VERSION=v0.41.1
 
 FROM docker.io/freebsd/freebsd-toolchain:15.1 AS builder
 
@@ -14,8 +14,9 @@ RUN set -ex; \
       mkdir -p /usr/local/bin; \
       ln -sf /usr/local/go/bin/* /usr/local/bin/
 RUN set -ex; \
+      env ASSUME_ALWAYS_YES=yes pkg install -y git; \
       mkdir -p /app; \
-      env CGO_ENABLED=0 go install -ldflags "-s -w" github.com/pocketbase/pocketbase/examples/base@${VERSION}; \
+      env CGO_ENABLED=0 GOPRIVATE=ganigeorgiev.com go install -ldflags "-s -w" ganigeorgiev.com/pocketbase/pocketbase/examples/base@${VERSION}; \
       mv /app/base /app/pocketbase
 
 # podman build --target output -o type=local,dest=./out
